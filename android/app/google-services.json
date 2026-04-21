@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "960292503618",
+    "project_id": "moneywise-3af52",
+    "storage_bucket": "moneywise-3af52.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:960292503618:android:88db9f3dd65e4e8a66addb",
+        "android_client_info": {
+          "package_name": "com.example.money_wise"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "960292503618-2ktr7n4i9ip2pc3mlkgbmu91t1o3jnul.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDE7CnvOL7qqxQ748VNMVNFGn6ASKWvjFk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "960292503618-2ktr7n4i9ip2pc3mlkgbmu91t1o3jnul.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
