@@ -14,10 +14,8 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     // Scaffold é uma classe que permite utilizar vários recursos do flutter
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: const Text("Bem-vindo de volta"),
-      ),
+      appBar: AppBar(title: const Text("Dashboard")),
+      body: const Center(child: Text("Bem-vindo ao Money Wise!")),
     );
   }
 }

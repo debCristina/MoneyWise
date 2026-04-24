@@ -1,3 +1,4 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:money_wise/features/Home/presentation/home_page.dart';
 
@@ -9,7 +10,11 @@ import 'package:money_wise/features/Home/presentation/home_page.dart';
 •	MyApp() → é o  aplicativo inteiro
  */
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart'; 
+import 'features/auth/data/repositories/auth_repository.dart';
+import 'features/auth/logic/bloc/auth_bloc.dart';
+import 'features/auth/presentation/pages/cadastro_page.dart';
+import 'features/auth/presentation/pages/login_page.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,21 +35,27 @@ class MyApp extends StatelessWidget {
   // 	sempre que algo precisa ser desenhado, esse metodo roda
   @override
   Widget build(BuildContext context) {
+    // 1. Criamos o Provider no topo para que todo o app (ou as rotas de auth) tenha acesso
+    return BlocProvider(
+      // Injetamos o AuthRepository conforme planejado no seu Trello
+      create: (context) => AuthBloc(AuthRepository()),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Money Wise',
+        theme: ThemeData(
+          fontFamily: 'Poppins',
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        ),
+        // 2. Definimos a LoginPage como a tela inicial para testar o fluxo de login
+        home: const LoginPage(),
 
-    // Material app define o tema do app, navegação, tela inicial, configurações
-    // globais
-    return MaterialApp(
-      // remove aquela faixa “DEBUG” no canto
-      debugShowCheckedModeBanner: false,
-      // título interno do app (Android/iOS)
-      title: 'Money Wise',
-      // visual do app
-      theme: ThemeData(
-        fontFamily: 'Poppins',
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        // 3. (Opcional) Defina suas rotas aqui para o Navigator funcionar
+        routes: {
+          '/home': (context) => const HomePage(),
+          '/cadastro': (context) => const CadastroPage(),
+          '/login': (context) => const LoginPage(),
+        },
       ),
-      // define qual página abre primeiro
-      home: const HomePage(),
     );
   }
 }
