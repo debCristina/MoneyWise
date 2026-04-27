@@ -41,7 +41,7 @@ class _CadastroPageState extends State<CadastroPage> {
         padding: const EdgeInsets.all(16.0),
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state){
-            if(state is AuthAuthenticated){
+            if(state is AuthSuccess){
               Navigator.pushReplacementNamed(context, '/home');
             } else if (state is AuthError) {
               ScaffoldMessenger.of(context).showSnackBar(

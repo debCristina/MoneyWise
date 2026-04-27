@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
         padding: const EdgeInsets.all(16.0),
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
-            if (state is AuthAuthenticated) {
+            if (state is AuthSuccess) {
               // Navega para a Home se o login der certo
               Navigator.pushReplacementNamed(context, '/home');
             } else if (state is AuthError) {

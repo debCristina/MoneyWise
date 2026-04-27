@@ -1,19 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:money_wise/features/Home/presentation/home_page.dart';
-
-// Ponto de entrada do app flutter
-
-/*
-•	main() → ponto de início do Dart
-•	runApp() → inicia o Flutter na tela
-•	MyApp() → é o  aplicativo inteiro
- */
 import 'package:firebase_core/firebase_core.dart';
-import 'features/auth/data/repositories/auth_repository.dart';
-import 'features/auth/logic/bloc/auth_bloc.dart';
-import 'features/auth/presentation/pages/cadastro_page.dart';
-import 'features/auth/presentation/pages/login_page.dart';
+import 'package:money_wise/features/auth/data/repositories/auth_repository.dart';
+import 'package:money_wise/features/auth/logic/bloc/auth_bloc.dart';
+import 'package:money_wise/core/session/session_manager.dart';
+import 'package:money_wise/core/router/app_router.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -22,43 +13,52 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Inicializa a sessão persistente para trackear 10 min de inatividade
+  final sessionManager = SessionManager();
+  await sessionManager.init();
+
+  final authRepository = AuthRepository();
   
-  runApp(const MyApp());
+  // Cria o AppRouter que vai lidar com o redirecionamento global (GoRouter)
+  final appRouter = AppRouter(
+    authRepository: authRepository, 
+    sessionManager: sessionManager,
+  );
+  
+  runApp(MyApp(
+    authRepository: authRepository,
+    appRouter: appRouter,
+  ));
 }
-// 	Ele NÃO muda de estado, por isso é StatelessWidget
+
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final AuthRepository authRepository;
+  final AppRouter appRouter;
 
-  // This widget is the root of your application.
+  const MyApp({
+    super.key, 
+    required this.authRepository,
+    required this.appRouter,
+  });
 
-  // 	build() = constrói a interface da tela
-  // 	sempre que algo precisa ser desenhado, esse metodo roda
   @override
   Widget build(BuildContext context) {
-    // 1. Criamos o Provider no topo para que todo o app (ou as rotas de auth) tenha acesso
     return BlocProvider(
-      // Injetamos o AuthRepository conforme planejado no seu Trello
-      create: (context) => AuthBloc(AuthRepository()),
-      child: MaterialApp(
+      create: (context) => AuthBloc(authRepository),
+      child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         title: 'Money Wise',
         theme: ThemeData(
           fontFamily: 'Poppins',
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
-        // 2. Definimos a LoginPage como a tela inicial para testar o fluxo de login
-        home: const LoginPage(),
-
-        // 3. (Opcional) Defina suas rotas aqui para o Navigator funcionar
-        routes: {
-          '/home': (context) => const HomePage(),
-          '/cadastro': (context) => const CadastroPage(),
-          '/login': (context) => const LoginPage(),
-        },
+        routerConfig: appRouter.router,
       ),
     );
   }
 }
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});

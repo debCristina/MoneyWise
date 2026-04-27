@@ -91,4 +91,24 @@ class AuthRepository {
   Future<void> logout() async {
     await _firebaseAuth.signOut();
   }
+
+  /// Retorna o usuário logado atual, se houver
+  User? getCurrentUser() {
+    final firebaseUser = _firebaseAuth.currentUser;
+    if (firebaseUser == null) return null;
+    return _mapFirebaseUser(firebaseUser);
+  }
+
+  /// Retorna um Stream reagindo em tempo real a mudanças de autenticação
+  Stream<User?> authStateChanges() {
+    return _firebaseAuth.authStateChanges().map((firebaseUser) {
+      if (firebaseUser == null) return null;
+      // Trata exceção dentro do map se _mapFirebaseUser falhar por algum motivo imprevisto
+      try {
+        return _mapFirebaseUser(firebaseUser);
+      } catch (e) {
+        return null;
+      }
+    });
+  }
 }
