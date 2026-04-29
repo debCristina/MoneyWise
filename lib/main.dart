@@ -5,6 +5,7 @@ import 'package:money_wise/features/auth/data/repositories/auth_repository.dart'
 import 'package:money_wise/features/auth/logic/bloc/auth_bloc.dart';
 import 'package:money_wise/core/session/session_manager.dart';
 import 'package:money_wise/core/router/app_router.dart';
+import 'package:go_router/go_router.dart';
 import 'firebase_options.dart';
 
 void main() async {

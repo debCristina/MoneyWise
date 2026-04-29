@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:money_wise/features/auth/logic/bloc/auth_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 //criando uma tela chamada HomePage.
 class CadastroPage extends StatefulWidget {
@@ -42,7 +43,7 @@ class _CadastroPageState extends State<CadastroPage> {
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state){
             if(state is AuthSuccess){
-              Navigator.pushReplacementNamed(context, '/home');
+              context.go('/home');
             } else if (state is AuthError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.message),backgroundColor: Colors.red),

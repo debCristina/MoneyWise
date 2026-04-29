@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../logic/bloc/auth_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 // 1. O Widget (A parte "pública" que o Flutter usa para montar a árvore)
 class LoginPage extends StatefulWidget {
@@ -68,8 +69,8 @@ class _LoginPageState extends State<LoginPage> {
 
                 TextButton(
                   onPressed: () {
-                    // Isso vai procurar a rota '/cadastro' que você definiu no main.dart
-                    Navigator.pushNamed(context, '/cadastro');
+                    // Isso vai procurar a rota '/cadastro' no main.dart
+                    context.push('/cadastro');
                   },
                   child: const Text('Não tem uma conta? Cadastre-se'),
                 ),
