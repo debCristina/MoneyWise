@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart' hide Transaction;
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:money_wise/features/transactions/data/repositories/transaction_repository.dart';
