@@ -66,6 +66,27 @@ void main() {
     });
   });
 
+  group('AuthRepository | Logout |', () {
+    test('Deve chamar signOut sem lançar exceção', () async {
+      when(() => mockFirebaseAuth.signOut())
+          .thenAnswer((_) async {});
+
+      await expectLater(authRepository.logout(), completes);
+
+      verify(() => mockFirebaseAuth.signOut()).called(1);
+    });
+
+    test('Deve propagar exceção quando signOut falhar', () async {
+      when(() => mockFirebaseAuth.signOut())
+          .thenThrow(Exception('Erro inesperado'));
+
+      expect(
+            () async => await authRepository.logout(),
+        throwsA(isA<Exception>()),
+      );
+    });
+  });
+
   group('AuthRepository | Cadastro |', () {
     test('Deve atualizar e retornar User quando o cadastro for aprovado pelo servidor', () async {
       // Arrange
