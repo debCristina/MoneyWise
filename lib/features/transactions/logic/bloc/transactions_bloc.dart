@@ -108,7 +108,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           transactions: transactions,
           saldo: _calcularSaldo(transactions),
         ),
-        onError: (_, __) =>
+        onError: (_, _) =>
         const TransactionError('Erro ao carregar transações.'),
       );
     } catch (e) {
@@ -129,7 +129,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           transactions: transactions,
           saldo: _calcularSaldo(transactions),
         ),
-        onError: (_, __) =>
+        onError: (_, _) =>
         const TransactionError('Erro ao salvar transação.'),
       );
     } catch (e) {
@@ -150,7 +150,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           transactions: transactions,
           saldo: _calcularSaldo(transactions),
         ),
-        onError: (_, __) =>
+        onError: (_, _) =>
         const TransactionError('Erro ao deletar transação.'),
       );
     } catch (e) {
