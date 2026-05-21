@@ -36,6 +36,7 @@ void main() {
 
     final transacoes = await repository.getAll('user-123').first;
 
+
     // mais recente primeiro
     expect(transacoes.first.id, equals('txn-dez'));
     expect(transacoes.last.id, equals('txn-jan'));
