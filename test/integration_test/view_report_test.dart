@@ -15,7 +15,7 @@ void main() {
     repository = TransactionRepository(firestore: fakeFirestore);
   });
 
-  // HU03 — CA1: relatório contém despesas organizadas por período
+  // relatório contém despesas organizadas por período
   testWidgets('HU03 | relatório exibe transações ordenadas por data decrescente', (tester) async {
     await repository.save(Transaction(
       id: 'txn-jan',
@@ -36,12 +36,12 @@ void main() {
 
     final transacoes = await repository.getAll('user-123').first;
 
-    // mais recente primeiro (RAP003 do HU03)
+    // mais recente primeiro
     expect(transacoes.first.id, equals('txn-dez'));
     expect(transacoes.last.id, equals('txn-jan'));
   });
 
-  // RAP001 — saldo calculado corretamente (receitas - despesas)
+  // saldo calculado corretamente (receitas - despesas)
   testWidgets('HU03 | saldo total é a diferença entre receitas e despesas', (tester) async {
     await repository.save(Transaction(
       id: 'r1',

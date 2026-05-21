@@ -15,7 +15,7 @@ void main() {
     repository = TransactionRepository(firestore: fakeFirestore);
   });
 
-  // HU01 — CA1: sistema permite registrar despesa informando o valor
+  // sistema permite registrar despesa informando o valor
   testWidgets('HU01 | fluxo completo: salvar despesa e recuperar no relatório', (tester) async {
     // 1. Usuário preenche os campos e salva a despesa (RAP001 — campos obrigatórios)
     final despesa = Transaction(
@@ -29,7 +29,7 @@ void main() {
 
     await repository.save(despesa);
 
-    // 2. A despesa aparece no relatório do usuário (HU03 — CA1)
+    // 2. A despesa aparece no relatório do usuário
     final stream = repository.getAll('user-123');
     final transacoes = await stream.first;
 
@@ -38,7 +38,7 @@ void main() {
     expect(transacoes.first.value, equals(100.0));
   });
 
-  // RAP002 — campo valor só aceita positivos
+  //campo valor só aceita positivos
   testWidgets('HU01 | RAP002: valor negativo deve ser rejeitado', (tester) async {
     expect(
           () => Transaction(

@@ -15,7 +15,7 @@ void main() {
     repository = TransactionRepository(firestore: fakeFirestore);
   });
 
-  // HU02 — CA1: sistema permite registrar receita informando o valor
+  // sistema permite registrar receita informando o valor
   testWidgets('HU02 | fluxo completo: salvar receita e aparecer no relatório', (tester) async {
     final receita = Transaction(
       id: 'txn-receita-001',
@@ -35,7 +35,7 @@ void main() {
     expect(transacoes.first.category, equals('salario'));
   });
 
-  // RAP002 — valor negativo rejeitado também em receitas
+  // valor negativo rejeitado também em receitas
   testWidgets('HU02 | RAP002: receita com valor negativo deve ser rejeitada', (tester) async {
     expect(
           () => Transaction(
