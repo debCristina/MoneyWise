@@ -8,14 +8,18 @@ class Transaction {
   final String category;
   final TransactionType type;
 
-  const Transaction({
+  Transaction({
     required this.id,
     required this.userId,
     required this.value,
     required this.data,
     required this.category,
     required this.type,
-  });
+  }) {
+    if (value <= 0) {
+      throw ArgumentError('value deve ser maior que zero, recebeu: $value');
+    }
+  }
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
     final typeStr = json['type'] as String;
@@ -35,11 +39,9 @@ class Transaction {
     final dataRaw = json['data'];
     final DateTime dataConvertida;
 
-    // Suporta DateTime direto (testes) ou Timestamp do Firestore
     if (dataRaw is DateTime) {
       dataConvertida = dataRaw;
     } else {
-      // Firestore Timestamp tem o método .toDate()
       dataConvertida = (dataRaw as dynamic).toDate() as DateTime;
     }
 
@@ -60,8 +62,7 @@ class Transaction {
       'value': value,
       'data': data,
       'category': category,
-      'type': type.name, // 'despesa' ou 'receita'
+      'type': type.name,
     };
   }
 }
- 

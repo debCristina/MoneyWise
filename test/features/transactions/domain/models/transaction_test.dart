@@ -14,7 +14,7 @@ void main() {
       'type': 'despesa',
     };
 
-    test('fromJson lança ArgumentError quando type é inválido', () {
+    test('lança ArgumentError quando type é inválido', () {
       final mapaInvalido = {...mapaValido, 'type': 'invalido'};
 
       expect(
@@ -23,7 +23,7 @@ void main() {
       );
     });
 
-    test('fromJson cria Transaction com todos os campos corretos', () {
+    test('cria Transaction com todos os campos corretos', () {
       final transaction = Transaction.fromJson(mapaValido);
 
       expect(transaction.id, equals('txn-001'));
@@ -50,6 +50,27 @@ void main() {
       expect(restaurado.value, equals(original.value));
       expect(restaurado.category, equals(original.category));
       expect(restaurado.type, equals(original.type));
+    });
+
+    test('fromJson cria Transaction com type receita', () {
+      final mapa = {...mapaValido, 'type': 'receita'};
+      final transaction = Transaction.fromJson(mapa);
+
+      expect(transaction.type, equals(TransactionType.receita));
+    });
+
+    test('construtor lança ArgumentError quando value é negativo', () {
+      expect(
+            () => Transaction(
+          id: 'txn-x',
+          userId: 'user-123',
+          value: -1.0,
+          data: DateTime(2024, 6, 15),
+          category: 'alimentacao',
+          type: TransactionType.despesa,
+        ),
+        throwsA(isA<ArgumentError>()),
+      );
     });
 
   });
