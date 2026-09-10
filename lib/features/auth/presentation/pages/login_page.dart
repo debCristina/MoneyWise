@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../logic/bloc/auth_bloc.dart';
 
 // 1. O Widget (A parte "pública" que o Flutter usa para montar a árvore)
@@ -26,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
           listener: (context, state) {
             if (state is AuthSuccess) {
               // Navega para a Home se o login der certo
-              Navigator.pushReplacementNamed(context, '/home');
+              context.go('/home');
             } else if (state is AuthError) {
               // Mostra o erro que capturamos no AuthBloc
               ScaffoldMessenger.of(context).showSnackBar(
@@ -69,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                 TextButton(
                   onPressed: () {
                     // Isso vai procurar a rota '/cadastro' que você definiu no main.dart
-                    Navigator.pushNamed(context, '/cadastro');
+                    context.push('/cadastro');
                   },
                   child: const Text('Não tem uma conta? Cadastre-se'),
                 ),
