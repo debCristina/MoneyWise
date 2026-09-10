@@ -16,6 +16,10 @@ class SessionManager with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
   }
 
+  Future<void> startSession() async {
+  await updateLastActiveTime();
+  }
+
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
   }

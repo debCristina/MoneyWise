@@ -28,24 +28,27 @@ void main() async {
   
   runApp(MyApp(
     authRepository: authRepository,
+    sessionManager: sessionManager,
     appRouter: appRouter,
   ));
 }
 
 class MyApp extends StatelessWidget {
   final AuthRepository authRepository;
+  final SessionManager sessionManager;
   final AppRouter appRouter;
 
   const MyApp({
     super.key, 
     required this.authRepository,
+    required this.sessionManager,
     required this.appRouter,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AuthBloc(authRepository),
+      create: (context) => AuthBloc(authRepository, sessionManager),
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         title: 'Money Wise',
