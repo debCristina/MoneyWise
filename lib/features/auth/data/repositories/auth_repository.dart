@@ -1,9 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import '../../domain/models/user.dart';
 
 /// Exceção personalizada legível pela camada de BLoC/UI
 class AuthException implements Exception {
   final String message;
+
   AuthException(this.message);
 
   @override
@@ -15,13 +17,18 @@ class AuthRepository {
 
   /// Permite injeção de dependência para testes, mas usa a instância padrão se null
   AuthRepository({firebase_auth.FirebaseAuth? firebaseAuth})
-      : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance;
+      : _firebaseAuth =
+            firebaseAuth ?? firebase_auth.FirebaseAuth.instance;
 
   /// Converte o usuário do Firebase para o modelo puro do domínio
-  User _mapFirebaseUser(firebase_auth.User? firebaseUser, {String? defaultNome}) {
+  User _mapFirebaseUser(
+    firebase_auth.User? firebaseUser, {
+    String? defaultNome,
+  }) {
     if (firebaseUser == null) {
       throw AuthException('Usuário não retornado pelo servidor.');
     }
+
     return User(
       id: firebaseUser.uid,
       nome: firebaseUser.displayName ?? defaultNome ?? 'Usuário',
@@ -34,19 +41,26 @@ class AuthRepository {
     switch (e.code) {
       case 'invalid-email':
         return 'O formato do e-mail é inválido.';
+
       case 'user-not-found':
         return 'Nenhum usuário encontrado para este e-mail.';
+
       case 'wrong-password':
       case 'invalid-credential':
         return 'E-mail ou senha incorretos.';
+
       case 'email-already-in-use':
         return 'Esse e-mail já está em uso por outra conta.';
+
       case 'weak-password':
         return 'A senha digitada é muito fraca. Tente uma mais forte.';
+
       case 'user-disabled':
         return 'Esta conta de usuário foi bloqueada ou desativada.';
+
       case 'too-many-requests':
         return 'Muitas tentativas falhas. Tente novamente mais tarde.';
+
       default:
         return 'Ocorreu um erro na autenticação. Tente novamente.';
     }
@@ -55,22 +69,42 @@ class AuthRepository {
   /// Método de login
   Future<User> login(String email, String senha) async {
     try {
-      final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+      debugPrint('REPOSITORY: Tentando login para $email');
+
+      final userCredential =
+          await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: senha,
       );
+
+      debugPrint(
+        'REPOSITORY: Firebase retornou usuário: '
+        '${userCredential.user?.email}',
+      );
+
       return _mapFirebaseUser(userCredential.user);
     } on firebase_auth.FirebaseAuthException catch (e) {
+      debugPrint('REPOSITORY: FirebaseAuthException');
+      debugPrint('Código: ${e.code}');
+      debugPrint('Mensagem: ${e.message}');
+
       throw AuthException(_handleFirebaseError(e));
     } catch (e) {
+      debugPrint('REPOSITORY: Erro inesperado: $e');
+
       throw AuthException('Erro inesperado: $e');
     }
   }
 
   /// Método de cadastro
-  Future<User> cadastro(String email, String senha, String nome) async {
+  Future<User> cadastro(
+    String email,
+    String senha,
+    String nome,
+  ) async {
     try {
-      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+      final userCredential =
+          await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: senha,
       );
@@ -79,7 +113,10 @@ class AuthRepository {
       await userCredential.user?.updateDisplayName(nome);
 
       // Retorna nosso usuário mapeado aproveitando o nome inserido
-      return _mapFirebaseUser(userCredential.user, defaultNome: nome);
+      return _mapFirebaseUser(
+        userCredential.user,
+        defaultNome: nome,
+      );
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw AuthException(_handleFirebaseError(e));
     } catch (e) {
@@ -95,15 +132,21 @@ class AuthRepository {
   /// Retorna o usuário logado atual, se houver
   User? getCurrentUser() {
     final firebaseUser = _firebaseAuth.currentUser;
-    if (firebaseUser == null) return null;
+
+    if (firebaseUser == null) {
+      return null;
+    }
+
     return _mapFirebaseUser(firebaseUser);
   }
 
   /// Retorna um Stream reagindo em tempo real a mudanças de autenticação
   Stream<User?> authStateChanges() {
     return _firebaseAuth.authStateChanges().map((firebaseUser) {
-      if (firebaseUser == null) return null;
-      // Trata exceção dentro do map se _mapFirebaseUser falhar por algum motivo imprevisto
+      if (firebaseUser == null) {
+        return null;
+      }
+
       try {
         return _mapFirebaseUser(firebaseUser);
       } catch (e) {
